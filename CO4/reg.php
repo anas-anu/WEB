@@ -1,64 +1,168 @@
 <html>
-<head><center><b><h1><u>REGISTRATION FORM</u></h1></b></center></head>
+<head>
+<style>
+    h1
+    {
+        color:red;
+    }
+    span
+    {
+        color:red;
+    }
+    body
+    {
+        background:yellow;
+    }
+    #bt
+    {
+        color:white;
+        background-color:green;
+        border:None;
+    }
+</style></head>
 <body>
-<form action="register.php" method="POST">
+<center><b><h1><u>REGISTRATION FORM</u></h1></b></center>
+<?php
+$fnameErr = $lnameErr = $pswderr = $ageErr = $ErrMsgf = $ErrMsgl = $ErrAge = "";
+$fname = $lname = $pswd = $age = "";
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+    if (empty($_POST["fname"]))
+    {  
+        $fnameErr = "* First Name is required";
+    } 
+    else 
+    {  
+        $fname=test_input($_POST["fname"]);
+        $f="Valid";
+    }  
+
+    if (empty($_POST["lname"]))
+    {  
+        $lnameErr = "* Last Name is required";
+    } 
+    else 
+    {  
+        $lname=test_input($_POST["lname"]); 
+        $l="Valid";
+    }  
+
+    if (empty($_POST["pwd"]))
+    {  
+        $pswderr= "* Password is required";
+    } 
+    else 
+    {  
+        $pswd=test_input($_POST["pwd"]); 
+        $p="Valid";
+    }  
+    
+    if (!preg_match ("/^[a-zA-z]*$/",$_POST ["fname"])) 
+    {  
+        $ErrMsgf = "* Only Alphabets and whitespace are allowed";    
+    }   
+    else 
+    {  
+        $fname=test_input($_POST["fname"]);
+        $f="Valid";
+    }
+
+    if (!preg_match ("/^[a-zA-z]*$/",$_POST ["lname"])) 
+    {  
+        $ErrMsgl = "* Only Alphabets and whitespace are allowed";    
+    }   
+    else 
+    {  
+        $lname=test_input($_POST["lname"]);
+        $l="Valid";
+    }
+
+    if (!preg_match ("/^[0-9]*$/", $_POST["age"])) 
+    {  
+        $ErrAge="* age is Only Natural Numbers";  
+    }   
+    else 
+    {  
+        $age=test_input($_POST["age"]);  
+        $a="Valid";
+    }
+
+    if (empty($_POST["age"]))
+    {  
+        $ageErr= "* Age is required";
+    } 
+    else 
+    {  
+        $age=test_input($_POST["age"]); 
+        $a="Valid";
+    }  
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST")
+    {
+        if(isset($_POST["bt"]))
+        {
+            header("Location : registration.php");
+        }
+    }
+}
+function test_input($data) 
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+ }
+?>
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
 <center>
-<table border="2" cellspacing="10" cellpadding="10">
+<table cellspacing="10" cellpadding="10">
 <tr>
-<td>First name:</td>
-<td><input type="text" name="txt1"></td>
+    <td>FIRST NAME:</td>
+    <td><input type="text" name="fname">
+    <span class = "error"><?php echo $fnameErr;?></span>
+    <span class = "error"><?php echo $ErrMsgf;?></span></td>
 </tr>
 <tr>
-<td>Last name:</td>
-<td><input type="text" name="txt2"></td>
+	<td>LAST NAME:</td>
+    <td><input type="text" name="lname">
+    <span class = "error"><?php echo $lnameErr;?></span>
+    <span class = "error"><?php echo $ErrMsgl;?></span></td>
+</tr>
+<tr>	
+    <td>PASSWORD:</td>
+    <td><input type="password" name="pwd">
+    <span class = "error"><?php echo $pswderr;?></span>
+    </td>
 </tr>
 <tr>
-<td>Password:</td>
-<td><input type="password" name="pwd"></td>
+    <td>AGE:</td>
+    <td><input type="text" name="age">
+    <span class = "error"><?php echo $ageErr;?></span>
+    <span class = "error"><?php echo $ErrAge;?></span></td>
 </tr>
 <tr>
-<td>Age:</td>
-<td><input type="text" name="txt3"></td>
+    <td>ADDRESS:</td>
+    <td><input type="text" name="addr"></td>
 </tr>
 <tr>
-<td>Address:</td>
-<td><input type="text" name="txt4"></td>
+    <td>GENDER:</td>
+    <td><input type="radio" name="radio" value="male">Male
+    <input type="radio" name="radio" value="female">Female</td>
 </tr>
 <tr>
-<td>Gender:</td>
-<td><input type="radio" name="rd" value="male">Male</td>
-<td><input type="radio" name="rd" value="female">Female</td>
+    <td>LANGUAGES KNOWN:</td>
+    <td><input type="checkbox" name="chk[]" value="PHP">PHP
+    <input type="checkbox" name="chk[]" value="C">C
+    <input type="checkbox" name="chk[]" value="CPP">CPP
+    <input type="checkbox" name="chk[]" value="JAVA">JAVA</td>
 </tr>
 <tr>
-<td>Languages known:</td>
-<td><input type="checkbox" name="chk[]" value="PHP">PHP</td>
-<td><input type="checkbox" name="chk[]" value="C">C</td>
-<td><input type="checkbox" name="chk[]" value="CPP">CPP</td>
-<td><input type="checkbox" name="chk[]" value="JAVA">JAVA</td>
+    <td colspan="5" align="center"><input type="submit" value="Register" id="bt" name="bt"></td>
 </tr>
-<center><td rowspan="2"><input type="submit" name="submit" value="submit"></td></center>
 </table>
 </center>
 </form>
 </body>
 </html>
-<?php
-echo "<b><u><font size=5>REGISTRATION FORM</font></u></b><br>";
-$fname=$_POST['txt1'];
-$lname=$_POST['txt2'];
-$age=$_POST['txt3'];
-$addr=$_POST['txt4'];
-echo "Name: $fname $lname<br>";
-echo "Age: $age<br>";
-echo "Address:$addr<br>";
-$r=$_POST['rd'];
-if($r==male)
-echo "Gender:Male<br>";
-else
-echo "Gender:Female<br>";
-echo"Languages Known:<br>";
-foreach($_POST['chk'] as $selected)
-{
-echo $selected."<br>";
-}
-?>
+
+
